@@ -17,17 +17,19 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css" />
@@ -35,18 +37,17 @@
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.4cbf315f70debaebd550c87a6162cf0f.min.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js"></script>
@@ -64,6 +65,7 @@
     <link rel="prev" title="Project 2: Relationship Analysis &amp; Visualization" href="project_2.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -79,19 +81,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -99,7 +90,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -107,8 +97,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -124,7 +114,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -154,15 +145,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -286,25 +273,19 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -320,6 +301,18 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-information">0. General Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">1. Data Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">2. Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-analysis">3. Correlation Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-analysis">4. Regression Analysis</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -329,12 +322,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="project-3-hypothesis-testing">
-<h1>Project 3: Hypothesis Testing<a class="headerlink" href="#project-3-hypothesis-testing" title="Permalink to this heading">#</a></h1>
-<ul class="simple">
-<li><p>Author: Chloe Yu</p></li>
-</ul>
-<div class="cell docutils container">
+  <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
 <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;vscode+jupyterlab+notebook_connected&quot;</span>
@@ -342,8 +330,1178 @@ document.write(`
 </div>
 </div>
 </div>
-<p><a class="reference external" href="https://fred.stlouisfed.org/series/JTSJOL">Job Opening: Date Source</a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="project-3-hypothesis-testing">
+<h1>Project 3: Hypothesis Testing<a class="headerlink" href="#project-3-hypothesis-testing" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Author: Chloe Yu</p></li>
+</ul>
+<p>In this project, we will utilize what we have learned throughout our course <code class="docutils literal notranslate"><span class="pre">computing</span> <span class="pre">in</span> <span class="pre">context</span></code> and finalize our data analytic product. We will continue to explore the interesting statiscal patterns in macroeconomic data to help us understand the effect and drivers of monetary policy. For this segment, we go on to hypothesize that job openings from different sector has positve influence on the changes in federal fund rate.</p>
+<section id="general-information">
+<h2>0. General Information<a class="headerlink" href="#general-information" title="Permalink to this heading">#</a></h2>
+<ol class="arabic">
+<li><p>Datasets to be used:</p>
+<p><a class="reference external" href="https://fred.stlouisfed.org/series/JTSJOL">Job Opening:</a></p>
 <p><code class="docutils literal notranslate"><span class="pre">https://fred.stlouisfed.org/series/JTSJOL</span></code></p>
+<p><a class="reference external" href="https://fred.stlouisfed.org/series/EFFR">Effective Federal Fund Rate:</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">https://fred.stlouisfed.org/series/EFFR</span></code></p>
+</li>
+<li><p>Analysis Question:</p>
+<p>Does changes in job openings in various non-famr sectors has a positive relationship with the changes in federal fund rate.</p>
+</li>
+<li><p>Columns that will be used:</p>
+<p>‘Date’,</p>
+<p>‘JTSJOL’: Total Nonfarm,</p>
+<p>‘JTS2300JOL’: Construction,</p>
+<p>‘JTS3000JOL’: Manufacturing,</p>
+<p>‘JTS540099JOL’: Professional and Business Services,</p>
+<p>‘JTS9000JOL’: Government,</p>
+<p>‘JTU5100JOL’: Information,</p>
+<p>‘JTS4400JOL’: Retail Trade,</p>
+<p>‘JTU480099JOL’: Transportation, Warehousing, and Utilities,</p>
+<p>‘JTS7100JOL’: Arts, Entertainment, and Recreation,</p>
+<p>‘JTU5300JOL’: Real Estate and Rental and Leasing,</p>
+<p>‘JTU4200JOL’: Wholesale Trade,</p>
+<p>‘JTS7000JOL’: Leisure and Hospitality,</p>
+<p>‘JTS6200JOL’: Health Care and Social Assistance</p>
+</li>
+<li><p>Columns to be used to merge/join them:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Date</span></code></p>
+</li>
+<li><p>Site URL:
+<a class="reference internal" href="#"><span class="xref myst">Chloe Github Page</span></a></p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import required libraries</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-preprocessing">
+<h2>1. Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load datasets</span>
+<span class="n">job_openings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/jobopenings.csv&#39;</span><span class="p">)</span>
+<span class="n">fed_funds</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/FEDFUNDS.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Similar to last time, we will have to perform some preliminary processing and cleaning to make sure the data makes sense for our analysis and is easy to interpret when plot. We want to rename the columns for consistency in merging and help streamline variable to more interpretable ones.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fed_funds</span> <span class="o">=</span> <span class="n">fed_funds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;DATE&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;FEDFUNDS&#39;</span><span class="p">:</span> <span class="s1">&#39;Federal Fund Rate&#39;</span><span class="p">})</span>
+<span class="n">fed_funds</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Federal Fund Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-01-01</td>
+      <td>0.07</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2014-02-01</td>
+      <td>0.07</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2014-03-01</td>
+      <td>0.08</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2014-04-01</td>
+      <td>0.09</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014-05-01</td>
+      <td>0.09</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">job_openings</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;DATE&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTSJOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Total Nonfarm&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS2300JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Construction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS3000JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Manufacturing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS540099JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Professional and Business Services&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS9000JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Government&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTU5100JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Information&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS4400JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Retail Trade&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTU480099JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Transportation, Warehousing, and Utilities&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS7100JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Arts, Entertainment, and Recreation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTU5300JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Real Estate and Rental and Leasing&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTU4200JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Wholesale Trade&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS7000JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Leisure and Hospitality&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;JTS6200JOL&#39;</span><span class="p">:</span> <span class="s1">&#39;Health Care and Social Assistance&#39;</span>
+<span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">job_openings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Total Nonfarm</th>
+      <th>Construction</th>
+      <th>Manufacturing</th>
+      <th>Professional and Business Services</th>
+      <th>Leisure and Hospitality</th>
+      <th>Information</th>
+      <th>Health Care and Social Assistance</th>
+      <th>Government</th>
+      <th>Transportation, Warehousing, and Utilities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-01-01</td>
+      <td>6</td>
+      <td>155</td>
+      <td>261</td>
+      <td>713</td>
+      <td>596</td>
+      <td>110</td>
+      <td>630</td>
+      <td>389</td>
+      <td>174</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2014-02-01</td>
+      <td>246</td>
+      <td>139</td>
+      <td>286</td>
+      <td>848</td>
+      <td>558</td>
+      <td>102</td>
+      <td>660</td>
+      <td>402</td>
+      <td>118</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2014-03-01</td>
+      <td>15</td>
+      <td>125</td>
+      <td>282</td>
+      <td>773</td>
+      <td>571</td>
+      <td>102</td>
+      <td>678</td>
+      <td>425</td>
+      <td>140</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2014-04-01</td>
+      <td>178</td>
+      <td>116</td>
+      <td>275</td>
+      <td>842</td>
+      <td>662</td>
+      <td>128</td>
+      <td>642</td>
+      <td>435</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014-05-01</td>
+      <td>181</td>
+      <td>119</td>
+      <td>294</td>
+      <td>857</td>
+      <td>710</td>
+      <td>104</td>
+      <td>734</td>
+      <td>441</td>
+      <td>157</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert &#39;date&#39; columns to datetime format</span>
+<span class="n">job_openings</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">job_openings</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+<span class="n">fed_funds</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">fed_funds</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since the job opening data is given as change, while federal fund rate is given as the static data point, we will also need to transform the federal fund rate data to its percentage change.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the percentage change for the Federal Funds Rate</span>
+<span class="n">fed_funds</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fed_funds</span><span class="p">[</span><span class="s1">&#39;Federal Fund Rate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>  
+<span class="n">fed_funds</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Federal Fund Rate</th>
+      <th>Federal Funds Rate (% Change)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-01-01</td>
+      <td>0.07</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2014-02-01</td>
+      <td>0.07</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2014-03-01</td>
+      <td>0.08</td>
+      <td>0.142857</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2014-04-01</td>
+      <td>0.09</td>
+      <td>0.125000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014-05-01</td>
+      <td>0.09</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Now let’s merge the dataset and take a look at its basical stastical properties and data types.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">merged_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">job_openings</span><span class="p">,</span> <span class="n">fed_funds</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">merged_data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 129 entries, 0 to 128
+Data columns (total 12 columns):
+ #   Column                                      Non-Null Count  Dtype         
+---  ------                                      --------------  -----         
+ 0   Date                                        129 non-null    datetime64[ns]
+ 1   Total Nonfarm                               129 non-null    int64         
+ 2   Construction                                129 non-null    int64         
+ 3   Manufacturing                               129 non-null    int64         
+ 4   Professional and Business Services          129 non-null    int64         
+ 5   Leisure and Hospitality                     129 non-null    int64         
+ 6   Information                                 129 non-null    int64         
+ 7   Health Care and Social Assistance           129 non-null    int64         
+ 8   Government                                  129 non-null    int64         
+ 9   Transportation, Warehousing, and Utilities  129 non-null    int64         
+ 10  Federal Fund Rate                           129 non-null    float64       
+ 11  Federal Funds Rate (% Change)               128 non-null    float64       
+dtypes: datetime64[ns](1), float64(2), int64(9)
+memory usage: 12.2 KB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">merged_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Total Nonfarm</th>
+      <th>Construction</th>
+      <th>Manufacturing</th>
+      <th>Professional and Business Services</th>
+      <th>Leisure and Hospitality</th>
+      <th>Information</th>
+      <th>Health Care and Social Assistance</th>
+      <th>Government</th>
+      <th>Transportation, Warehousing, and Utilities</th>
+      <th>Federal Fund Rate</th>
+      <th>Federal Funds Rate (% Change)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>129</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>129.000000</td>
+      <td>128.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>2019-05-02 03:32:05.581395456</td>
+      <td>25.751938</td>
+      <td>271.255814</td>
+      <td>496.217054</td>
+      <td>1376.937984</td>
+      <td>1007.527132</td>
+      <td>134.573643</td>
+      <td>1276.627907</td>
+      <td>723.232558</td>
+      <td>325.069767</td>
+      <td>1.558372</td>
+      <td>0.067588</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>2014-01-01 00:00:00</td>
+      <td>-1418.000000</td>
+      <td>116.000000</td>
+      <td>261.000000</td>
+      <td>713.000000</td>
+      <td>335.000000</td>
+      <td>61.000000</td>
+      <td>630.000000</td>
+      <td>389.000000</td>
+      <td>118.000000</td>
+      <td>0.050000</td>
+      <td>-0.923077</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>2016-09-01 00:00:00</td>
+      <td>-189.000000</td>
+      <td>186.000000</td>
+      <td>336.000000</td>
+      <td>1109.000000</td>
+      <td>759.000000</td>
+      <td>104.000000</td>
+      <td>997.000000</td>
+      <td>527.000000</td>
+      <td>219.000000</td>
+      <td>0.100000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>2019-05-01 00:00:00</td>
+      <td>18.000000</td>
+      <td>272.000000</td>
+      <td>444.000000</td>
+      <td>1268.000000</td>
+      <td>931.000000</td>
+      <td>124.000000</td>
+      <td>1123.000000</td>
+      <td>680.000000</td>
+      <td>300.000000</td>
+      <td>0.770000</td>
+      <td>0.004051</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2022-01-01 00:00:00</td>
+      <td>281.000000</td>
+      <td>351.000000</td>
+      <td>586.000000</td>
+      <td>1553.000000</td>
+      <td>1153.000000</td>
+      <td>149.000000</td>
+      <td>1641.000000</td>
+      <td>951.000000</td>
+      <td>388.000000</td>
+      <td>2.330000</td>
+      <td>0.084626</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2024-09-01 00:00:00</td>
+      <td>956.000000</td>
+      <td>456.000000</td>
+      <td>997.000000</td>
+      <td>2416.000000</td>
+      <td>1771.000000</td>
+      <td>292.000000</td>
+      <td>2147.000000</td>
+      <td>1187.000000</td>
+      <td>627.000000</td>
+      <td>5.330000</td>
+      <td>1.500000</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>NaN</td>
+      <td>380.083750</td>
+      <td>96.829770</td>
+      <td>192.276939</td>
+      <td>386.867644</td>
+      <td>323.476310</td>
+      <td>45.827594</td>
+      <td>396.831889</td>
+      <td>215.226680</td>
+      <td>132.666063</td>
+      <td>1.813165</td>
+      <td>0.254368</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="visualization">
+<h2>2. Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading">#</a></h2>
+<p>The scales seems very tricky to deal with, let’s try to visualize the two data series to understand how their magnitude aligns.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Total Nonfarm&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total Job Openings&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Total Job Openings vs Federal Funds Rate Over Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Values&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/d0b5a50ba0e0c84feece2cb66dcf853a3111d5ee7af9e949c77db8aef6e24bb5.png" src="_images/d0b5a50ba0e0c84feece2cb66dcf853a3111d5ee7af9e949c77db8aef6e24bb5.png" />
+</div>
+</div>
+<p>As we can see, without further normalization, the scales of the two datasets cannot be used for sensible analysis. The magnitude of the two datasests are very, very different. We have to perform normalization to our dataset to make sure that the magnitude aligns.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+
+<span class="n">sector_columns</span> <span class="o">=</span> <span class="n">job_openings</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Exclude the &#39;date&#39; column</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">job_openings_normalized</span> <span class="o">=</span> <span class="n">job_openings</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">job_openings_normalized</span><span class="p">[</span><span class="n">sector_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">job_openings</span><span class="p">[</span><span class="n">sector_columns</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalized Job Openings Dataset:&quot;</span><span class="p">)</span>
+<span class="n">job_openings_normalized</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Normalized Job Openings Dataset:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Total Nonfarm</th>
+      <th>Construction</th>
+      <th>Manufacturing</th>
+      <th>Professional and Business Services</th>
+      <th>Leisure and Hospitality</th>
+      <th>Information</th>
+      <th>Health Care and Social Assistance</th>
+      <th>Government</th>
+      <th>Transportation, Warehousing, and Utilities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>124</th>
+      <td>2024-05-01</td>
+      <td>0.456613</td>
+      <td>0.470588</td>
+      <td>-0.116848</td>
+      <td>-0.061656</td>
+      <td>-0.213092</td>
+      <td>-0.385281</td>
+      <td>0.390903</td>
+      <td>0.626566</td>
+      <td>-0.155206</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>2024-06-01</td>
+      <td>-0.074979</td>
+      <td>0.076471</td>
+      <td>-0.421196</td>
+      <td>-0.264827</td>
+      <td>-0.153203</td>
+      <td>-0.653680</td>
+      <td>0.302571</td>
+      <td>0.571429</td>
+      <td>0.033399</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>2024-07-01</td>
+      <td>0.026959</td>
+      <td>-0.317647</td>
+      <td>-0.336957</td>
+      <td>-0.013506</td>
+      <td>-0.122563</td>
+      <td>-0.350649</td>
+      <td>0.100857</td>
+      <td>0.208020</td>
+      <td>-0.269155</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>2024-08-01</td>
+      <td>0.320977</td>
+      <td>0.247059</td>
+      <td>-0.375000</td>
+      <td>-0.129771</td>
+      <td>0.008357</td>
+      <td>-0.567100</td>
+      <td>0.125906</td>
+      <td>0.403509</td>
+      <td>-0.131631</td>
+    </tr>
+    <tr>
+      <th>128</th>
+      <td>2024-09-01</td>
+      <td>-0.157540</td>
+      <td>0.011765</td>
+      <td>-0.402174</td>
+      <td>-0.039342</td>
+      <td>-0.146240</td>
+      <td>-0.316017</td>
+      <td>-0.108767</td>
+      <td>0.072682</td>
+      <td>-0.296660</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sector_columns</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">job_openings_normalized</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">job_openings_normalized</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Job Openings by Sector Over Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized Job Openings (0 to 1)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>  <span class="c1"># Move the legend inside the graph</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e70ac0ac1aeadd634e7b89f7259a772213fa90b2df65a1687eb98cfa5992c9a0.png" src="_images/e70ac0ac1aeadd634e7b89f7259a772213fa90b2df65a1687eb98cfa5992c9a0.png" />
+</div>
+</div>
+<p>Let’s now merge the two datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Merge with normalized job openings data</span>
+<span class="n">merged_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">job_openings_normalized</span><span class="p">,</span> <span class="n">fed_funds</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualization: Percentage Change in Federal Funds Rate and Normalized Job Openings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Total Nonfarm&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized Total Nonfarm Job Openings&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Total Nonfarm Job Openings vs Percentage Change in Federal Funds Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized Scale / % Change&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>  <span class="c1"># Move the legend inside the graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a5ae4fff3087fb4838f01ea45ac1b26c8a2904a677c6a28074bda62bfbe3ece3.png" src="_images/a5ae4fff3087fb4838f01ea45ac1b26c8a2904a677c6a28074bda62bfbe3ece3.png" />
+</div>
+</div>
+<p>Already from this visualization, we can see that there is significant positive correlation among the two data series. Let’s see if this relationship holds for other individual sectors of job openings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualization: Percentage Change in Federal Funds Rate and Normalized Job Openings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Construction&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized Construction Job Openings&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Construction Job Openings vs Percentage Change in Federal Funds Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized Scale / % Change&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>  <span class="c1"># Move the legend inside the graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/435edb40c9c0cec0c534c35852a32bdb346c562a18ff86c1a02fd93537b38c85.png" src="_images/435edb40c9c0cec0c534c35852a32bdb346c562a18ff86c1a02fd93537b38c85.png" />
+</div>
+</div>
+<p>There still exists a lot of interesting correlating patterns, however, there is some minor difference, we can say that construction sectors seems to have a very consistent patterns that is somestimes uncorrelated with the changes in the federal fund rate, but this is something we need to perform regression to carefully test.</p>
+<p>Let’s take a look at two more sectors before moving on to our tests.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualization: Percentage Change in Federal Funds Rate and Normalized Job Openings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Leisure and Hospitality&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized Leisure and Hospitality	Job Openings&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Leisure and Hospitality Job Openings vs Percentage Change in Federal Funds Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized Scale / % Change&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>  <span class="c1"># Move the legend inside the graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/1l/cz0zq77d43dccjqlpzkz3ddm0000gn/T/ipykernel_95350/2960664581.py:11: UserWarning:
+
+Glyph 9 (	) missing from current font.
+
+/opt/anaconda3/lib/python3.12/site-packages/IPython/core/pylabtools.py:170: UserWarning:
+
+Glyph 9 (	) missing from current font.
+</pre></div>
+</div>
+<img alt="_images/5aea9ffe0fa33d447561b73795b229a8497f8e1fda2737ee1a7755932fd3be7d.png" src="_images/5aea9ffe0fa33d447561b73795b229a8497f8e1fda2737ee1a7755932fd3be7d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualization: Percentage Change in Federal Funds Rate and Normalized Job Openings</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Transportation, Warehousing, and Utilities&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized Transportation, Warehousing, and Utilities Job Openings&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">merged_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Transportation, Warehousing, and Utilitie Job Openings vs Percentage Change in Federal Funds Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized Scale / % Change&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>  <span class="c1"># Move the legend inside the graph</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/527b3b3200f10a4b262cdc9257e658b0332f5ff72d299c697309087947afa2d1.png" src="_images/527b3b3200f10a4b262cdc9257e658b0332f5ff72d299c697309087947afa2d1.png" />
+</div>
+</div>
+<p>Despite the differences, we can observed that there is some underlying systematic drivers that affect both the job openings and federal fund to share similar seasonality and trends.</p>
+<p>Let’s first construct a correlation matrix to distill this idea.</p>
+</section>
+<section id="correlation-analysis">
+<h2>3. Correlation Analysis<a class="headerlink" href="#correlation-analysis" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Merge with Federal Funds Rate percentage change</span>
+<span class="n">merged_correlation_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">fed_funds</span><span class="p">[[</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">]],</span>
+    <span class="n">job_openings_normalized</span><span class="p">,</span>
+    <span class="n">on</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span>
+    <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span>
+<span class="p">)</span>
+
+<span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">merged_correlation_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">correlation_matrix</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Federal Funds Rate (% Change)</th>
+      <th>Total Nonfarm</th>
+      <th>Construction</th>
+      <th>Manufacturing</th>
+      <th>Professional and Business Services</th>
+      <th>Leisure and Hospitality</th>
+      <th>Information</th>
+      <th>Health Care and Social Assistance</th>
+      <th>Government</th>
+      <th>Transportation, Warehousing, and Utilities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Federal Funds Rate (% Change)</th>
+      <td>1.000000</td>
+      <td>0.148607</td>
+      <td>0.149798</td>
+      <td>0.292503</td>
+      <td>0.343420</td>
+      <td>0.315365</td>
+      <td>0.303202</td>
+      <td>0.279038</td>
+      <td>0.163815</td>
+      <td>0.116535</td>
+    </tr>
+    <tr>
+      <th>Total Nonfarm</th>
+      <td>0.148607</td>
+      <td>1.000000</td>
+      <td>0.003366</td>
+      <td>0.077249</td>
+      <td>0.073324</td>
+      <td>0.053894</td>
+      <td>-0.009203</td>
+      <td>-0.038360</td>
+      <td>-0.039094</td>
+      <td>0.022447</td>
+    </tr>
+    <tr>
+      <th>Construction</th>
+      <td>0.149798</td>
+      <td>0.003366</td>
+      <td>1.000000</td>
+      <td>0.780671</td>
+      <td>0.776731</td>
+      <td>0.804329</td>
+      <td>0.651150</td>
+      <td>0.876329</td>
+      <td>0.878667</td>
+      <td>0.798195</td>
+    </tr>
+    <tr>
+      <th>Manufacturing</th>
+      <td>0.292503</td>
+      <td>0.077249</td>
+      <td>0.780671</td>
+      <td>1.000000</td>
+      <td>0.935275</td>
+      <td>0.937356</td>
+      <td>0.783452</td>
+      <td>0.892196</td>
+      <td>0.842397</td>
+      <td>0.890905</td>
+    </tr>
+    <tr>
+      <th>Professional and Business Services</th>
+      <td>0.343420</td>
+      <td>0.073324</td>
+      <td>0.776731</td>
+      <td>0.935275</td>
+      <td>1.000000</td>
+      <td>0.934185</td>
+      <td>0.765382</td>
+      <td>0.909039</td>
+      <td>0.850366</td>
+      <td>0.880437</td>
+    </tr>
+    <tr>
+      <th>Leisure and Hospitality</th>
+      <td>0.315365</td>
+      <td>0.053894</td>
+      <td>0.804329</td>
+      <td>0.937356</td>
+      <td>0.934185</td>
+      <td>1.000000</td>
+      <td>0.759981</td>
+      <td>0.900115</td>
+      <td>0.841077</td>
+      <td>0.897935</td>
+    </tr>
+    <tr>
+      <th>Information</th>
+      <td>0.303202</td>
+      <td>-0.009203</td>
+      <td>0.651150</td>
+      <td>0.783452</td>
+      <td>0.765382</td>
+      <td>0.759981</td>
+      <td>1.000000</td>
+      <td>0.725712</td>
+      <td>0.666149</td>
+      <td>0.704167</td>
+    </tr>
+    <tr>
+      <th>Health Care and Social Assistance</th>
+      <td>0.279038</td>
+      <td>-0.038360</td>
+      <td>0.876329</td>
+      <td>0.892196</td>
+      <td>0.909039</td>
+      <td>0.900115</td>
+      <td>0.725712</td>
+      <td>1.000000</td>
+      <td>0.938962</td>
+      <td>0.862247</td>
+    </tr>
+    <tr>
+      <th>Government</th>
+      <td>0.163815</td>
+      <td>-0.039094</td>
+      <td>0.878667</td>
+      <td>0.842397</td>
+      <td>0.850366</td>
+      <td>0.841077</td>
+      <td>0.666149</td>
+      <td>0.938962</td>
+      <td>1.000000</td>
+      <td>0.884283</td>
+    </tr>
+    <tr>
+      <th>Transportation, Warehousing, and Utilities</th>
+      <td>0.116535</td>
+      <td>0.022447</td>
+      <td>0.798195</td>
+      <td>0.890905</td>
+      <td>0.880437</td>
+      <td>0.897935</td>
+      <td>0.704167</td>
+      <td>0.862247</td>
+      <td>0.884283</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot heatmap</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">correlation_matrix</span><span class="p">,</span>
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;cool&quot;</span><span class="p">,</span>
+    <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Correlation Heatmap: Job Openings Changes and Federal Funds Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e2596b2d154efaab1739d477cc50df8dd4941b53d9d4cb4c31107ca3c8eb2be9.png" src="_images/e2596b2d154efaab1739d477cc50df8dd4941b53d9d4cb4c31107ca3c8eb2be9.png" />
+</div>
+</div>
+<p>This correlation maps is not only visually very appealing, but it also shows us that there is significantly high correlation between the job openings in various sectors. However, we can also see that there is only weak positive associations between percentage changes in federal fund rate and job openings.</p>
+</section>
+<section id="regression-analysis">
+<h2>4. Regression Analysis<a class="headerlink" href="#regression-analysis" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prepare data for regression</span>
+<span class="n">regression_data</span> <span class="o">=</span> <span class="n">merged_correlation_data</span><span class="p">[[</span><span class="s1">&#39;Total Nonfarm&#39;</span><span class="p">,</span> <span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Define dependent (Y) and independent (X) variables</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">regression_data</span><span class="p">[</span><span class="s1">&#39;Total Nonfarm&#39;</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">regression_data</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">]</span>
+
+<span class="c1"># Add a constant to the independent variable for the intercept</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Fit the regression model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Display the regression results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                  OLS Regression Results                                 
+=========================================================================================
+Dep. Variable:     Federal Funds Rate (% Change)   R-squared:                       0.022
+Model:                                       OLS   Adj. R-squared:                  0.014
+Method:                            Least Squares   F-statistic:                     2.845
+Date:                           Sun, 08 Dec 2024   Prob (F-statistic):             0.0941
+Time:                                   14:28:05   Log-Likelihood:                -4.4645
+No. Observations:                            128   AIC:                             12.93
+Df Residuals:                                126   BIC:                             18.63
+Df Model:                                      1                                         
+Covariance Type:                       nonrobust                                         
+=================================================================================
+                    coef    std err          t      P&gt;|t|      [0.025      0.975]
+---------------------------------------------------------------------------------
+const             0.0421      0.027      1.564      0.120      -0.011       0.095
+Total Nonfarm     0.1176      0.070      1.687      0.094      -0.020       0.256
+==============================================================================
+Omnibus:                      103.100   Durbin-Watson:                   1.080
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1118.424
+Skew:                           2.692   Prob(JB):                    1.37e-243
+Kurtosis:                      16.443   Cond. No.                         3.29
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prepare data for regression</span>
+<span class="n">regression_data_full</span> <span class="o">=</span> <span class="n">merged_correlation_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Define dependent variable (Federal Funds Rate % Change) and independent variables (sector job openings)</span>
+<span class="n">Y_full</span> <span class="o">=</span> <span class="n">regression_data_full</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">]</span>
+<span class="n">X_full</span> <span class="o">=</span> <span class="n">regression_data_full</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Federal Funds Rate (% Change)&#39;</span><span class="p">])</span>
+
+<span class="c1"># Add a constant to the independent variables for the intercept</span>
+<span class="n">X_full</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X_full</span><span class="p">)</span>
+
+<span class="c1"># Fit the multiple regression model</span>
+<span class="n">full_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">Y_full</span><span class="p">,</span> <span class="n">X_full</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Display the regression results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">full_model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                  OLS Regression Results                                 
+=========================================================================================
+Dep. Variable:     Federal Funds Rate (% Change)   R-squared:                       0.331
+Model:                                       OLS   Adj. R-squared:                  0.280
+Method:                            Least Squares   F-statistic:                     6.478
+Date:                           Sun, 08 Dec 2024   Prob (F-statistic):           1.87e-07
+Time:                                   14:28:05   Log-Likelihood:                 19.802
+No. Observations:                            128   AIC:                            -19.60
+Df Residuals:                                118   BIC:                             8.916
+Df Model:                                      9                                         
+Covariance Type:                       nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          0.0771      0.043      1.803      0.074      -0.008       0.162
+Total Nonfarm                                  0.0959      0.063      1.520      0.131      -0.029       0.221
+Construction                                  -0.1072      0.077     -1.398      0.165      -0.259       0.045
+Manufacturing                                 -0.0429      0.128     -0.335      0.739      -0.297       0.211
+Professional and Business Services             0.2983      0.150      1.990      0.049       0.002       0.595
+Leisure and Hospitality                        0.2979      0.153      1.946      0.054      -0.005       0.601
+Information                                    0.0926      0.080      1.159      0.249      -0.066       0.251
+Health Care and Social Assistance              0.1754      0.154      1.140      0.257      -0.129       0.480
+Government                                    -0.0368      0.128     -0.287      0.775      -0.291       0.217
+Transportation, Warehousing, and Utilities    -0.4378      0.107     -4.094      0.000      -0.650      -0.226
+==============================================================================
+Omnibus:                       73.676   Durbin-Watson:                   1.547
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              396.871
+Skew:                           1.973   Prob(JB):                     6.61e-87
+Kurtosis:                      10.671   Cond. No.                         15.9
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">Y_full</span><span class="p">,</span> <span class="n">X_full</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Display robust regression results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">robust_model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                          Robust linear Model Regression Results                         
+=========================================================================================
+Dep. Variable:     Federal Funds Rate (% Change)   No. Observations:                  128
+Model:                                       RLM   Df Residuals:                      118
+Method:                                     IRLS   Df Model:                            9
+Norm:                                     HuberT                                         
+Scale Est.:                                  mad                                         
+Cov Type:                                     H1                                         
+Date:                           Sun, 08 Dec 2024                                         
+Time:                                   14:28:05                                         
+No. Iterations:                               50                                         
+==============================================================================================================
+                                                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          0.0363      0.021      1.765      0.078      -0.004       0.077
+Total Nonfarm                                  0.0231      0.030      0.763      0.445      -0.036       0.083
+Construction                                  -0.0767      0.037     -2.080      0.038      -0.149      -0.004
+Manufacturing                                  0.0191      0.062      0.310      0.757      -0.102       0.140
+Professional and Business Services             0.0620      0.072      0.861      0.389      -0.079       0.203
+Leisure and Hospitality                        0.2084      0.074      2.832      0.005       0.064       0.353
+Information                                    0.0125      0.038      0.326      0.744      -0.063       0.088
+Health Care and Social Assistance              0.0791      0.074      1.069      0.285      -0.066       0.224
+Government                                    -0.0113      0.062     -0.184      0.854      -0.132       0.110
+Transportation, Warehousing, and Utilities    -0.2038      0.051     -3.964      0.000      -0.305      -0.103
+==============================================================================================================
+
+If the model instance has been used for another fit with different fit parameters, then the fit options might not be the correct ones anymore .
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -392,6 +1550,26 @@ document.write(`
             
             
               
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-information">0. General Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">1. Data Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">2. Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-analysis">3. Correlation Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-analysis">4. Regression Analysis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -435,8 +1613,8 @@ By The Jupyter Book community
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>
